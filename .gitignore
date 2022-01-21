@@ -28,6 +28,8 @@
 *.so.*
 *.dylib
 build/
+dados.bin
+base
 # Executables
 *.exe
 *.out

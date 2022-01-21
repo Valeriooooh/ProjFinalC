@@ -2,8 +2,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#define ficheiro "dados.bin"
 
-struct Serie *head = NULL, *atual = NULL;
+FILE *fic;
+Serie ser;
 
 int menu() {
   int op, s;
@@ -33,7 +35,16 @@ void pausa() {
 
 void listar() {}
 
-void inserir() {}
+void inserir() {
+  fic = fopen(ficheiro, "ab");
+  int n;
+  printf("quantos registos pretende inserir?: ");
+  scanf("%i", &n);
+  for (int i = 1; i <= n; i++) {
+    ser = criar_serie_gui();
+    fwrite(&ser, sizeof(Serie), 1, fic);
+  }
+}
 
 void eliminar() { printf("eliminar"); }
 
@@ -66,21 +77,25 @@ void escolha(int n) {
 
 int main() {
 
-  FILE *fic;
   char linha[128];
   long salto = get_size_serie;
-  fic = fopen("dados.txt", "wb");
+  fic = fopen("dados.bin", "ab");
   if (fic == NULL) {
     printf("Erro ao abrir ficheiro\n");
     getchar();
     fclose(fic);
     exit(0);
   }
+  fclose(fic);
   fflush(stdin);
   system("cls");
   char op;
   printf("Deseja Inserir registos?[s/N]: ");
   scanf("%c", &op);
+  if (op != 's' && op != 'S') {
+    printf("Sair\n");
+  }
+  inserir();
 
   /* while (1) { */
   /*   escolha(menu()); */
