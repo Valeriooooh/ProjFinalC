@@ -1,6 +1,7 @@
 #include "../include/Serie.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #define ficheiro "dados.bin"
 
@@ -27,14 +28,23 @@ int menu() {
   return op;
 }
 
+// função que pausa o programa?
 void pausa() {
   getchar();
   getchar();
   return;
 }
 
-void listar() {}
+void listar() {
+  fic = fopen(ficheiro, "rb");
+  while (fread(&ser, sizeof(Serie), 1, fic)) {
+    print_serie(&ser);
+  }
+  pausa();
+}
 
+// função que abre o ficheiro
+// e insere os registos
 void inserir() {
   fic = fopen(ficheiro, "ab");
   int n;
@@ -44,11 +54,26 @@ void inserir() {
     ser = criar_serie_gui();
     fwrite(&ser, sizeof(Serie), 1, fic);
   }
+  fclose(fic);
 }
 
-void eliminar() { printf("eliminar"); }
+void eliminar() {
+  printf("eliminar");
+  // TODO
+}
 
-void pesquisar() { printf("pesquisar"); }
+void pesquisar() {
+  int idp;
+  printf("Qual o id da serie que pretende pesquisar?: ");
+  scanf("%i", &idp);
+  fic = fopen(ficheiro, "rb");
+  while (fread(&ser, sizeof(Serie), 1, fic)) {
+    if (ser.id == idp) {
+      print_serie(&ser);
+    }
+  }
+  pausa();
+}
 
 void atualizar() { printf("atualizar"); }
 
@@ -77,8 +102,6 @@ void escolha(int n) {
 
 int main() {
 
-  char linha[128];
-  long salto = get_size_serie;
   fic = fopen("dados.bin", "ab");
   if (fic == NULL) {
     printf("Erro ao abrir ficheiro\n");
@@ -90,15 +113,12 @@ int main() {
   fflush(stdin);
   system("cls");
   char op;
-  printf("Deseja Inserir registos?[s/N]: ");
-  scanf("%c", &op);
-  if (op != 's' && op != 'S') {
-    printf("Sair\n");
-  }
-  inserir();
-
-  /* while (1) { */
-  /*   escolha(menu()); */
-  /*   return 0; */
+  /* printf("Deseja Inserir registos?[s/N]: "); */
+  /* scanf("%c", &op); */
+  /* if (op != 's' && op != 'S') { */
+  /*   printf("Sair\n"); */
   /* } */
+  while (1) {
+    escolha(menu());
+  }
 }

@@ -1,9 +1,12 @@
 #include "../include/Serie.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 void print_serie(Serie *self) {
-  printf("Id: %i\n", self->id);
-  printf("Nome: %s\n", self->nome);
+  printf("\n------------------------------------------------");
+  printf("\n\nId: %i\n", self->id);
+  printf("Nome: %s", self->nome);
   printf("Ranking IMDB: %.1f\n", self->rankImdb);
   printf("Serviço de Streaming: ");
   switch (self->idStreaming) {
@@ -17,7 +20,7 @@ void print_serie(Serie *self) {
     printf("Amazon Prime");
     break;
   case 4:
-    printf("Netflix");
+    printf("Disney+");
     break;
   case 5:
     printf("Hulu");
@@ -26,22 +29,55 @@ void print_serie(Serie *self) {
     printf("Indefinido");
     break;
   }
+
+  printf("\nGeneros: ");
+
+  for (int i = 0; i < 3; i++) {
+    switch (self->generos[i]) {
+    case 1:
+      printf("Ação ");
+      break;
+    case 2:
+      printf("Comédia ");
+      break;
+    case 3:
+      printf("Terror ");
+      break;
+    case 4:
+      printf("Drama ");
+      break;
+    case 5:
+      printf("Ficção-Científica ");
+      break;
+    default:
+      printf("%i", self->generos[i]);
+      break;
+    }
+  }
 }
 
 long get_size_serie() { return (long)(sizeof(Serie)); }
 
-Serie criar_serie(int id, char *nome, float rankImdb, int idStreaming) {
-  Serie self = {id, *nome, rankImdb, idStreaming};
+Serie criar_serie(int id, char nome[30], float rankImdb, int idStr,
+                  int gen[3]) {
+  Serie self = {
+      .id = id,
+      .rankImdb = rankImdb,
+      .idStreaming = idStr,
+      .generos = {gen[0], gen[1], gen[2]},
+  };
+  strcpy(self.nome, nome);
   return self;
 }
 
 Serie criar_serie_gui() {
-  int id, idStreaming;
+  int id, idStreaming, gen[3];
   char nome[30];
   float rankImdb;
 
+  system("cls");
   fflush(stdin);
-  printf("id da  serie: ");
+  printf("\n\nId da  serie: ");
   scanf("%i", &id);
 
   getchar();
@@ -51,8 +87,21 @@ Serie criar_serie_gui() {
   printf("Ranking da  serie: ");
   scanf("%f", &rankImdb);
 
-  printf("id da plataforma: ");
+  printf("Id da plataforma: "
+         "\n[1]-Netflix"
+         "\n[2]-HBO"
+         "\n[3]-Amazon Prime"
+         "\n[4]-Disney+"
+         "\n[5]-Hulu\n");
   scanf("%i", &idStreaming);
 
-  return criar_serie(id, nome, rankImdb, idStreaming);
+  printf("Generos da serie (max: 3): "
+         "\n[1]-Ação"
+         "\n[2]-Comédia"
+         "\n[3]-Terror"
+         "\n[4]-Drama"
+         "\n[5]-Ficção-Científica\n");
+  scanf("%i%i%i", &gen[0], &gen[1], &gen[2]);
+
+  return criar_serie(id, nome, rankImdb, idStreaming, gen);
 }
