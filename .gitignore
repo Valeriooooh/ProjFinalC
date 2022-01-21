@@ -29,6 +29,7 @@
 *.dylib
 build/
 dados.bin
+dados.temp
 base
 # Executables
 *.exe

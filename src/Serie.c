@@ -50,7 +50,7 @@ void print_serie(Serie *self) {
       printf("Ficção-Científica ");
       break;
     default:
-      printf("%i", self->generos[i]);
+      printf(" ");
       break;
     }
   }
@@ -94,7 +94,6 @@ Serie criar_serie_gui() {
          "\n[4]-Disney+"
          "\n[5]-Hulu\n");
   scanf("%i", &idStreaming);
-
   printf("Generos da serie (max: 3): "
          "\n[1]-Ação"
          "\n[2]-Comédia"

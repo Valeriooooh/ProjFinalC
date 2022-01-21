@@ -40,6 +40,7 @@ void listar() {
   while (fread(&ser, sizeof(Serie), 1, fic)) {
     print_serie(&ser);
   }
+  fclose(fic);
   pausa();
 }
 
@@ -58,8 +59,24 @@ void inserir() {
 }
 
 void eliminar() {
-  printf("eliminar");
-  // TODO
+  int idp;
+  printf("Qual o id da serie que pretende eliminar: ");
+  scanf("%i", &idp);
+  fic = fopen(ficheiro, "rb");
+  FILE *ftemp;
+  ftemp = fopen("dados.temp", "wb+");
+  while (fread(&ser, sizeof(Serie), 1, fic)) {
+    if (ser.id != idp) {
+      fwrite(&ser, sizeof(Serie), 1, ftemp);
+    }
+  }
+  fclose(fic);
+  fclose(ftemp);
+  ftemp = fopen("dados.temp", "rb");
+  fic = fopen(ficheiro, "wb+");
+  while (fread(&ser, sizeof(Serie), 1, ftemp)) {
+    fwrite(&ser, sizeof(Serie), 1, fic);
+  }
 }
 
 void pesquisar() {
@@ -113,11 +130,6 @@ int main() {
   fflush(stdin);
   system("cls");
   char op;
-  /* printf("Deseja Inserir registos?[s/N]: "); */
-  /* scanf("%c", &op); */
-  /* if (op != 's' && op != 'S') { */
-  /*   printf("Sair\n"); */
-  /* } */
   while (1) {
     escolha(menu());
   }
