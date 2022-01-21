@@ -1,3 +1,4 @@
+#include "../include/Serie.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -65,16 +66,21 @@ void escolha(int n) {
 
 int main() {
 
-  FILE *fic = fopen("./bin/dados.bin", "ab");
+  FILE *fic;
   char linha[128];
-
+  long salto = get_size_serie;
+  fic = fopen("dados.txt", "wb");
   if (fic == NULL) {
     printf("Erro ao abrir ficheiro\n");
     getchar();
-    exit(1);
     fclose(fic);
-    inserir();
+    exit(0);
   }
+  fflush(stdin);
+  system("cls");
+  char op;
+  printf("Deseja Inserir registos?[s/N]: ");
+  scanf("%c", &op);
 
   /* while (1) { */
   /*   escolha(menu()); */
