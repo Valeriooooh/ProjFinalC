@@ -72,10 +72,38 @@ void eliminar() {
       print_serie(&ser);
       getchar();
       printf("Pretende remover este registo?[S/n]");
+      char op = getchar();
+      if (op == 's' || op == 'S')
+        pesq = ENCS;
+      else
+        pesq = ENCN;
+    } else {
+      fwrite(&ser, sizeof(ser), 1, ftemp);
     }
   }
-  fclose(fic);
-  fclose(ftemp);
+  switch (pesq) {
+  case NENC: {
+    printf("Registo não foi Encontrado");
+    remove("dados.temp");
+    pausa();
+    break;
+  }
+  case ENCN: {
+    printf("Registo não foi Eliminado");
+    remove("dados.temp");
+    pausa();
+    break;
+  }
+
+  case ENCS: {
+    fclose(fic);
+    fclose(ftemp);
+    remove(ficheiro);
+    rename("dados.temp", ficheiro);
+    printf("Registo foi Eliminado");
+    break;
+  }
+  }
 }
 
 void pesquisar() {
