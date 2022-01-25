@@ -54,24 +54,28 @@ void inserir() {
 }
 
 void eliminar() {
+  typedef enum pesquisa {
+    NENC, /// Não encontrou
+    ENCN, /// Encontrou mas não removeu
+    ENCS, /// Encontrou e removeu
+  } pesquisa;
+  pesquisa pesq = NENC;
   int idp;
+  FILE *ftemp;
   printf("Qual o id da serie que pretende eliminar: ");
   scanf("%i", &idp);
   fic = fopen(ficheiro, "rb");
-  FILE *ftemp;
   ftemp = fopen("dados.temp", "wb+");
+
   while (fread(&ser, sizeof(Serie), 1, fic)) {
     if (ser.id != idp) {
-      fwrite(&ser, sizeof(Serie), 1, ftemp);
+      print_serie(&ser);
+      getchar();
+      printf("Pretende remover este registo?[S/n]");
     }
   }
   fclose(fic);
   fclose(ftemp);
-  ftemp = fopen("dados.temp", "rb");
-  fic = fopen(ficheiro, "wb+");
-  while (fread(&ser, sizeof(Serie), 1, ftemp)) {
-    fwrite(&ser, sizeof(Serie), 1, fic);
-  }
 }
 
 void pesquisar() {
@@ -158,14 +162,60 @@ void atualizar() {
       int op;
       scanf("%i", &op);
       switch (op) {
+      case 1: {
+        char nome[30];
+        printf("\nInsira o Nome: ");
+        getchar();
+        fgets(nome, 30, stdin);
+        strcpy(ser.nome, nome);
+        fseek(fic, -sizeof(Serie), 1);
+        fwrite(&ser, sizeof(Serie), 1, fic);
+        break;
+      }
       case 2: {
         float rank;
-        printf("\nInsira o ranking: ");
+        printf("\nInsira o Ranking: ");
         scanf("%f", &rank);
         ser.rankImdb = rank;
         fseek(fic, -sizeof(Serie), 1);
         fwrite(&ser, sizeof(Serie), 1, fic);
+        break;
       }
+      case 3: {
+        int stream;
+        printf("\nInsira o Serviço de Streaming: ");
+        printf("Id da plataforma: "
+               "\n[1]-Netflix"
+               "\n[2]-HBO"
+               "\n[3]-Amazon Prime"
+               "\n[4]-Disney+"
+               "\n[5]-Hulu\n");
+        scanf("%i", &stream);
+        ser.idStreaming = stream;
+        fseek(fic, -sizeof(Serie), 1);
+        fwrite(&ser, sizeof(Serie), 1, fic);
+        break;
+      }
+      case 4: {
+        int gen[3];
+        printf("\nInsira os Generos: ");
+        printf("Generos da serie (max: 3): "
+               "\n[1]-Ação"
+               "\n[2]-Comédia"
+               "\n[3]-Animação"
+               "\n[4]-Terror"
+               "\n[5]-Drama"
+               "\n[6]-Ficção-Científica"
+               "\n[0]-Nulo\n");
+        scanf("%i%i%i", &gen[0], &gen[1], &gen[2]);
+        ser.generos[0] = gen[0], ser.generos[1] = gen[1],
+        ser.generos[2] = gen[2];
+        fseek(fic, -sizeof(Serie), 1);
+        fwrite(&ser, sizeof(Serie), 1, fic);
+        break;
+      }
+      default:
+        break;
       }
     }
   }
