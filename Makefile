@@ -6,6 +6,6 @@
 all:
 	gcc ./src/*.c -o ./build/bin/base
 run:
-	./build/bin/base
+	make all && ./build/bin/base
 
 # end
