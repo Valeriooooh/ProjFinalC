@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <locale.h>
+
+
 
 int menu() {
   int op, s;
@@ -48,6 +51,7 @@ void escolha(int n) {
 }
 
 int main() {
+  setlocale(0,"LC-ALL");
   init();
   while (1) {
     escolha(menu());
