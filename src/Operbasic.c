@@ -5,15 +5,20 @@
 #include <string.h>
 #include <unistd.h>
 
-#define ficheiro "dados.bin"
-FILE *fic;
-Serie ser;
-
 typedef enum pesquisa {
   NENC, /// Não encontrou
   ENCN, /// Encontrou mas não removeu
   ENCS, /// Encontrou e removeu
 } pesquisa;
+
+typedef enum bool {
+  false,
+  true,
+} bool;
+
+#define ficheiro "dados.bin"
+FILE *fic;
+Serie ser;
 
 void init() {
   fic = fopen("dados.bin", "ab");
@@ -50,11 +55,18 @@ void listar() {
 void inserir() {
   fic = fopen(ficheiro, "ab");
   int n;
+  char op;
+  system("cls");
   printf("quantos registos pretende inserir?: ");
   scanf("%i", &n);
   for (int i = 1; i <= n; i++) {
     ser = criar_serie_gui();
     fwrite(&ser, sizeof(Serie), 1, fic);
+    printf("Pretende continuar a inserir?[S/n]: ");
+    scanf("%c", &op);
+    if (op != 's' && op != 'S') {
+      break;
+    }
   }
   fclose(fic);
 }
@@ -63,6 +75,7 @@ void eliminar() {
   pesquisa pesq = NENC;
   int idp;
   FILE *ftemp;
+  system("cls");
   printf("Qual o id da serie que pretende eliminar: ");
   scanf("%i", &idp);
   fic = fopen(ficheiro, "rb");
@@ -71,7 +84,7 @@ void eliminar() {
     if (ser.id == idp) {
       print_serie(&ser);
       getchar();
-      printf("Pretende remover este registo?[S/n]");
+      printf("\nPretende remover este registo?[S/n]");
       char op = getchar();
       if (op == 's' || op == 'S')
         pesq = ENCS;
@@ -107,6 +120,7 @@ void eliminar() {
 }
 
 void pesquisar() {
+  bool encontrou = false;
   system("cls");
   printf("Qual o campo pelo qual pretende pesquisar?:"
          "\n[1]-Id da Serie"
@@ -122,6 +136,7 @@ void pesquisar() {
     fic = fopen(ficheiro, "rb");
     while (fread(&ser, sizeof(Serie), 1, fic)) {
       if (ser.id == idp) {
+        encontrou = true;
         print_serie(&ser);
       }
     }
@@ -140,6 +155,7 @@ void pesquisar() {
     fic = fopen(ficheiro, "rb");
     while (fread(&ser, sizeof(Serie), 1, fic)) {
       if (ser.idStreaming == idp) {
+        encontrou = true;
         print_serie(&ser);
       }
     }
@@ -160,6 +176,7 @@ void pesquisar() {
     while (fread(&ser, sizeof(Serie), 1, fic)) {
       if (((ser.generos[0] == idp) || (ser.generos[1] == idp) ||
            (ser.generos[2] == idp))) {
+        encontrou = true;
         print_serie(&ser);
       }
     }
@@ -170,10 +187,14 @@ void pesquisar() {
     break;
   }
   }
+  if (!encontrou) {
+    printf("Registo não encontrado");
+  }
   pausa();
 }
 
 void atualizar() {
+  system("cls");
   printf("Atualizar Serie\n\n");
   int idp;
   printf("Qual o id da serie que pretende pesquisar?: ");

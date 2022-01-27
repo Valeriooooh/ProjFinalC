@@ -1,11 +1,9 @@
 /* #include "../include/Operbasic.h" */
+#include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <locale.h>
-
-
 
 int menu() {
   int op, s;
@@ -51,7 +49,7 @@ void escolha(int n) {
 }
 
 int main() {
-  setlocale(0,"LC-ALL");
+  setlocale(LC_ALL, "C");
   init();
   while (1) {
     escolha(menu());
