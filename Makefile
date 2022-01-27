@@ -7,5 +7,7 @@ all:
 	gcc ./src/*.c -o ./build/bin/base
 run:
 	make all && ./build/bin/base
+rw:
+	make all && .\build\bin\base
 
 # end
