@@ -9,6 +9,12 @@
 FILE *fic;
 Serie ser;
 
+typedef enum pesquisa {
+  NENC, /// Não encontrou
+  ENCN, /// Encontrou mas não removeu
+  ENCS, /// Encontrou e removeu
+} pesquisa;
+
 void init() {
   fic = fopen("dados.bin", "ab");
   if (fic == NULL) {
@@ -54,11 +60,6 @@ void inserir() {
 }
 
 void eliminar() {
-  typedef enum pesquisa {
-    NENC, /// Não encontrou
-    ENCN, /// Encontrou mas não removeu
-    ENCS, /// Encontrou e removeu
-  } pesquisa;
   pesquisa pesq = NENC;
   int idp;
   FILE *ftemp;
@@ -66,9 +67,8 @@ void eliminar() {
   scanf("%i", &idp);
   fic = fopen(ficheiro, "rb");
   ftemp = fopen("dados.temp", "wb+");
-
   while (fread(&ser, sizeof(Serie), 1, fic)) {
-    if (ser.id != idp) {
+    if (ser.id == idp) {
       print_serie(&ser);
       getchar();
       printf("Pretende remover este registo?[S/n]");
